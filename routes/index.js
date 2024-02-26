@@ -36,5 +36,40 @@ router.get('/getAllMovies', function(req, res) {
   res.status(200).json(serverArray);
 });
 
+/* Add one new movie */
+router.post('/AddMovie', function(req, res) {
+  const newMovie = req.body;
+  serverArray.push(newMovie);
+  res.status(200).json(newMovie);
+});
+
+
+
+// add route for delete
+router.delete('/DeleteMovie/:ID', (req, res) => {
+  const delID = req.params.ID;
+  let pointer = GetObjectPointer(delID);
+  if(pointer == -1){    // if did not find movie in array
+      console.log("not found");
+      return res.status(500).json({
+          status: "error - no such ID"
+       });
+  }
+else {    // if did find the movie
+    serverArray.splice(pointer, 1);  // remove 1 element at index 
+    res.send('Movie with ID: ' + delID + ' deleted!');
+}
+});
+
+
+function GetObjectPointer(whichID){
+  for(i=0; i< serverArray.length; i++){
+      if(serverArray[i].ID == whichID){
+          return i;
+      }
+  }
+  return -1;
+}
+
 
 module.exports = router;

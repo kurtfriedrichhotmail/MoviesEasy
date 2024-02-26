@@ -31,14 +31,32 @@ document.addEventListener("DOMContentLoaded", function () {
 // add button events ************************************************************************
     
     document.getElementById("buttonAdd").addEventListener("click", function () {
-        movieArray.push(new MovieObject(document.getElementById("title").value, 
+        let newMovie = new MovieObject(document.getElementById("title").value, 
         document.getElementById("year").value,
         selectedGenre,
         document.getElementById("man").value,
         document.getElementById("woman").value,
-        document.getElementById("URL").value));
-        document.location.href = "index.html#ListAll";
+        document.getElementById("URL").value);
+        //document.location.href = "index.html#ListAll";
         // also add the URL value
+    // push new object to server
+
+       //=======================================
+       $.ajax({
+        url : "/AddMovie",
+        type: "POST",
+        data: JSON.stringify(newMovie),
+        contentType: "application/json; charset=utf-8",
+        success: function (result) {
+            console.log(result);
+            document.location.href = "index.html#ListAll";
+            },
+        error: function (xhr, textStatus, errorThrown) {  
+            alert("Server could not add Movie: " + newMovie.Title);
+            alert(textStatus + " " + errorThrown);
+            }
+    });
+
     });
     
     document.getElementById("buttonClear").addEventListener("click", function () {
@@ -72,6 +90,23 @@ document.addEventListener("DOMContentLoaded", function () {
     // button on details page to view the youtube video
     document.getElementById("trailer").addEventListener("click", function () {
         window.open(document.getElementById("oneURL").innerHTML);
+    });
+
+
+     // button on details page to delete
+     document.getElementById("delete").addEventListener("click", function () {
+        let movieID = localStorage.getItem('parm');
+        $.ajax({
+            type: "DELETE",
+            url: "/DeleteMovie/" +movieID,
+            success: function(result){
+                alert(result);
+            },
+            error: function (xhr, textStatus, errorThrown) {  
+                alert("Server could not delete Movie with ID " + ID)
+            }  
+        });
+            
     });
 // end of add button events ************************************************************************
 

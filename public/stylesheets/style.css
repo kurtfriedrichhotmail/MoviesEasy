@@ -9,4 +9,9 @@ h1 {
   font-size:      40px;
   font-weight:    bold;
   color:  rgb(24, 211, 117);
+  
+    border: 5px solid;
+    max-width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
 }
